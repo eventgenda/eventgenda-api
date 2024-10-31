@@ -1,0 +1,25 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const event_controller_1 = __importDefault(require("../controllers/event.controller"));
+const auth_middleware_1 = __importDefault(require("../middlewares/auth.middleware"));
+const role_middleware_1 = __importDefault(require("../middlewares/role.middleware"));
+const eventRouter = express_1.default.Router();
+eventRouter.get('/', event_controller_1.default.getEvents);
+eventRouter.get('/user', auth_middleware_1.default, event_controller_1.default.getEventByUser);
+eventRouter.get('/:id', event_controller_1.default.getEvent);
+eventRouter.get('/category/:category', event_controller_1.default.getEventByCategory);
+eventRouter.post('/', auth_middleware_1.default, (0, role_middleware_1.default)('organizer'), event_controller_1.default.createEvent);
+eventRouter.put('/:id', auth_middleware_1.default, (0, role_middleware_1.default)('organizer'), event_controller_1.default.updateEvent);
+eventRouter.delete('/:id', auth_middleware_1.default, (0, role_middleware_1.default)('organizer', 'admin'), event_controller_1.default.deleteEvent);
+eventRouter.post('/:id/funding', auth_middleware_1.default, (0, role_middleware_1.default)('organizer'), event_controller_1.default.fundingEvent);
+eventRouter.post('/:id/donate', auth_middleware_1.default, (0, role_middleware_1.default)('user'), event_controller_1.default.donateEvent);
+eventRouter.post('/:eventId/join', auth_middleware_1.default, (0, role_middleware_1.default)('user'), event_controller_1.default.joinEvent);
+eventRouter.post('/:eventId/exit', auth_middleware_1.default, (0, role_middleware_1.default)('user'), event_controller_1.default.exitEvent);
+eventRouter.post('/:eventId/cancel', auth_middleware_1.default, (0, role_middleware_1.default)('organizer', 'admin'), event_controller_1.default.cancelEvent);
+eventRouter.put('/:eventId/approve', auth_middleware_1.default, (0, role_middleware_1.default)('admin'), event_controller_1.default.approveEvent);
+eventRouter.put('/:eventId/reject', auth_middleware_1.default, (0, role_middleware_1.default)('admin'), event_controller_1.default.rejectEvent);
+exports.default = eventRouter;

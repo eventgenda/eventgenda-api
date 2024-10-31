@@ -15,8 +15,8 @@ import paymentRouter from '../routes/payment.route';
 import projectRouter from '../routes/project.route';
 import rewardRouter from '../routes/reward.route';
 import sponsorRouter from '../routes/sponsor.route';
-import userRouter from '../routes/user.route';
 import uploadRouter from '../routes/upload.route';
+import userRouter from '../routes/user.route';
 
 dotenv.config();
 
@@ -28,7 +28,13 @@ const URL = process.env.MONGODB_URI;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  })
+);
 app.use(
   fileUpload({
     useTempFiles: true,
